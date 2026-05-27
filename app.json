@@ -1,0 +1,40 @@
+{
+    "name": "TXT to video Uploader bot by ASSASSIN ",
+    "description": "Download videos from various websites using this telegram bot",
+    "logo": "https://te.legra.ph/file/643605aef3e54ef515dfa.jpg",
+    "keywords": [
+        "text-video",
+        "video-extract",
+        "pyrogram"
+    ],
+    "repository": "https://github.com/HUSTLERBOSS/TXT-UPLOADER",
+    "success_url": "https://telegram.me/",
+    "stack": "container",
+    "env": {
+        "API_ID": {
+            "description": "15958423",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "0f38f0c37cec744bccb074b5180e37b0",
+            "required": true
+        },
+        "BOT_TOKEN": {
+            "description": "Enter your bot token You can generate by @BotFather",
+            "required": true
+        }
+    },
+    "addons": [],
+    "buildpacks": [
+        {
+            "url": "https://github.com/amivin/aria2-heroku.git"
+        },
+        {
+            "url": "heroku/python"
+        },       
+        {
+            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+        }
+      
+    ]
+    }
