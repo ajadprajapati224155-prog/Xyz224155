@@ -739,12 +739,8 @@ async def convert_command(client, message):
 
 
 # ─────────────── MAIN ────────────────────────────────────────────
-async def main():
+if __name__ == "__main__":
     keep_alive()
     asyncio.get_event_loop().create_task(check_expiry())
-    await bot.start()
-    LOG.info("Bot started!")
-    await asyncio.Event().wait()
-
-if __name__ == "__main__":
+    LOG.info("Bot Started!")
     bot.run()
