@@ -286,7 +286,7 @@ async def send_force_join_msg(message):
             "Phir Dobara /start Bhejo ✅"
         ),
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("✅ Join Channel", url=f"https://t.me/{FORCE_SUB_CHANNEL}")],
+            [InlineKeyboardButton("✅ Join Channel", url=f"https://t.me/ssc_exam_helper")],
             [InlineKeyboardButton("🔄 Joined? Click Here", callback_data="check_join")]
         ])
     )
