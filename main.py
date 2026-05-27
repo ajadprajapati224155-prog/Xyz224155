@@ -267,29 +267,106 @@ async def send_logs(client: Client, m: Message):
         await m.reply_text(f"Error: {e}")
 
 
-# ─────────────── FORCE JOIN ──────────────────────────────────────
+# ─────────────── FORCE JOIN CONFIG ──────────────────────────────
+
+FORCE_SUB_CHANNEL = "ssc_exam_helper"
+
+# ─────────────── FORCE JOIN CHECK ───────────────────────────────
+
 async def check_force_join(client, user_id):
     try:
         member = await client.get_chat_member(FORCE_SUB_CHANNEL, user_id)
-        if member.status in ["kicked", "left"]:
+
+        if member.status in ["left", "kicked"]:
             return False
+
         return True
-    except Exception:
+
+    except Exception as e:
+        print(f"Force Join Error: {e}")
         return False
+
+
+# ─────────────── FORCE JOIN MESSAGE ─────────────────────────────
 
 async def send_force_join_msg(message):
     await message.reply_photo(
         photo="https://te.legra.ph/file/666b524fee02e1accd2fe.png",
+
         caption=(
-            "🚀 **Bot Use Karne Ke Liye Pehle Join Karo!**\n\n"
+            "🚀 **Bot Use Karne Ke Liye Pehle Channel Join Karo!**\n\n"
             "👇 Niche Button Pe Click Karke Channel Join Karo\n"
-            "Phir Dobara /start Bhejo ✅"
+            "✅ Join Karne Ke Baad 'Joined? Click Here' Dabao"
         ),
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("✅ Join Channel", url=f"https://t.me/ssc_exam_helper")],
-            [InlineKeyboardButton("🔄 Joined? Click Here", callback_data="check_join")]
-        ])
+
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "✅ Join Channel",
+                        url="https://t.me/ssc_exam_helper"
+                    )
+                ],
+
+                [
+                    InlineKeyboardButton(
+                        "🔄 Joined? Click Here",
+                        callback_data="check_join"
+                    )
+                ]
+            ]
+        )
     )
+
+
+# ─────────────── START COMMAND ─────────────────────────────────
+
+@bot.on_message(filters.command("start"))
+async def start_command(client, message: Message):
+
+    user_id = message.from_user.id
+
+    is_joined = await check_force_join(client, user_id)
+
+    if not is_joined:
+        await send_force_join_msg(message)
+        return
+
+    await message.reply_text(
+        f"✅ Welcome {message.from_user.mention}!\n\n"
+        "⚔️ Shiv Extract Bot Started Successfully ⚔️"
+    )
+
+
+# ─────────────── JOIN CHECK CALLBACK ───────────────────────────
+
+@bot.on_callback_query(filters.regex("^check_join$"))
+async def check_join_callback(client, callback_query):
+
+    user_id = callback_query.from_user.id
+
+    is_joined = await check_force_join(client, user_id)
+
+    if is_joined:
+
+        await callback_query.message.delete()
+
+        await callback_query.message.reply_text(
+            "✅ Channel Joined Successfully!\n\n"
+            "⚔️ Welcome To Shiv Extract Bot ⚔️"
+        )
+
+        await callback_query.answer(
+            "✅ Verified Successfully!",
+            show_alert=True
+        )
+
+    else:
+
+        await callback_query.answer(
+            "❌ Abhi Tak Channel Join Nahi Kiya!",
+            show_alert=True
+        )
 
 
 # ─────────────── START ───────────────────────────────────────────
